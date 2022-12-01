@@ -1,58 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useState } from 'react';
 import './App.css';
-
-function App() {
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { useAppDispatch } from './app/hooks';
+import { decrement, increment } from './features/counter/counterSlice';
+const options = ['Increase', 'Decrease'];
+const App: React.FC = () => {
+  const [selectValue, setSelectValue] = useState('');
+  const dispatch = useAppDispatch();
+  const onSelectAllChange = (e: SelectChangeEvent<string>) => {
+    const newValue = e.target.value;
+    // 假设逻辑是选increase时触发增加的action，选decrease时触发减少的action
+    if (newValue === 'Increase') {
+      dispatch(increment());
+    } else {
+      dispatch(decrement());
+    }
+    setSelectValue(newValue);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <Select value={selectValue} onChange={onSelectAllChange}>
+        {options.map((option, i) => (
+          <MenuItem key={i} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </Select>
     </div>
   );
-}
+};
 
 export default App;
